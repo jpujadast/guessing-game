@@ -1,333 +1,330 @@
 
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@400;500;600&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@400;600;700&display=swap');
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   .shell {
     width: 100%;
     min-height: 100dvh;
-    background: #0f0f1a;
+    background: #0d0d1f;
     display: flex;
     flex-direction: column;
     font-family: 'DM Sans', sans-serif;
-    padding: env(safe-area-inset-top, 0) env(safe-area-inset-right, 0) env(safe-area-inset-bottom, 0) env(safe-area-inset-left, 0);
+    color: white;
   }
 
   .status-bar {
     display: flex;
     justify-content: space-between;
-    padding: clamp(10px,3vw,18px) clamp(16px,5vw,28px) 4px;
-    font-size: clamp(10px,2.5vw,13px);
+    padding: 14px 24px 6px;
+    font-size: 13px;
     font-family: 'Space Mono', monospace;
-    color: rgba(255,255,255,0.4);
+    color: #a78bfa;
   }
 
-  .game-header {
-    padding: clamp(10px,2.5vw,18px) clamp(16px,5vw,28px) 0;
+  .header {
+    padding: 12px 24px 0;
     text-align: center;
   }
-
   .game-title {
     font-family: 'Space Mono', monospace;
-    font-size: clamp(9px,2vw,11px);
-    letter-spacing: 3px;
-    color: #6c6cff;
+    font-size: 12px;
+    letter-spacing: 5px;
+    color: #f0abfc;
     text-transform: uppercase;
-    margin-bottom: 6px;
+    margin-bottom: 10px;
   }
-
   .game-message {
-    font-size: clamp(13px,3.5vw,16px);
-    font-weight: 500;
-    color: rgba(255,255,255,0.85);
-    line-height: 1.5;
-    min-height: clamp(40px,10vw,56px);
+    font-size: 18px;
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1.4;
+    min-height: 52px;
   }
 
   .number-display {
-    margin: clamp(10px,3vw,20px) clamp(16px,5vw,28px);
-    background: #1a1a2e;
-    border-radius: clamp(14px,4vw,20px);
-    padding: clamp(14px,4vw,24px);
+    margin: 14px 20px;
+    background: #1e1040;
+    border-radius: 22px;
+    padding: 20px 24px 16px;
+    border: 2px solid #7c3aed;
     text-align: center;
-    border: 0.5px solid rgba(108,108,255,0.3);
   }
-
   .range-label {
-    font-size: clamp(9px,2vw,11px);
-    color: rgba(255,255,255,0.35);
+    font-size: 11px;
+    color: #c4b5fd;
     font-family: 'Space Mono', monospace;
-    letter-spacing: 1px;
+    letter-spacing: 2px;
     margin-bottom: 10px;
   }
-
   .range-bar {
     display: flex;
     align-items: center;
-    gap: 8px;
-    margin-bottom: clamp(10px,3vw,16px);
+    gap: 10px;
+    margin-bottom: 12px;
   }
-
   .range-num {
     font-family: 'Space Mono', monospace;
-    font-size: clamp(11px,2.5vw,13px);
-    color: rgba(255,255,255,0.4);
-    min-width: 24px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #e9d5ff;
+    min-width: 30px;
+    text-align: center;
   }
-
   .progress-track {
-    flex: 1;
-    height: 4px;
-    background: rgba(255,255,255,0.1);
-    border-radius: 2px;
+    flex: 1; height: 6px;
+    background: #3b1f72;
+    border-radius: 3px;
     position: relative;
   }
-
   .progress-fill {
-    height: 100%;
-    border-radius: 2px;
-    background: linear-gradient(90deg, #6c6cff, #a855f7);
+    height: 100%; border-radius: 3px;
+    background: linear-gradient(90deg, #a855f7, #ec4899);
     transition: width 0.4s ease;
   }
-
   .guess-dot {
     position: absolute;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: clamp(8px,2vw,10px);
-    height: clamp(8px,2vw,10px);
+    top: 50%; transform: translate(-50%, -50%);
+    width: 14px; height: 14px;
     border-radius: 50%;
-    background: white;
+    background: #fbbf24;
+    border: 2px solid white;
     display: none;
     transition: left 0.4s ease;
   }
-
   .big-number {
     font-family: 'Space Mono', monospace;
-    font-size: clamp(36px,10vw,56px);
-    font-weight: 700;
-    color: white;
-    line-height: 1;
-    transition: all 0.3s ease;
+    font-size: 80px; font-weight: 700;
+    color: #f0abfc; line-height: 1;
+    letter-spacing: -2px;
+    transition: all 0.25s ease;
+    text-shadow: 0 0 40px rgba(192,80,252,0.4);
   }
-
   .hint-tag {
-    margin-top: 8px;
+    margin-top: 10px;
     display: inline-block;
-    font-size: clamp(11px,2.5vw,13px);
-    padding: 4px 14px;
+    font-size: 15px; font-weight: 700;
+    padding: 6px 18px;
     border-radius: 20px;
-    font-weight: 500;
-    opacity: 0;
-    transition: opacity 0.3s ease;
+    opacity: 0; transition: opacity 0.3s;
   }
-  .hint-tag.higher { background: rgba(34,197,94,0.15); color: #4ade80; opacity: 1; }
-  .hint-tag.lower  { background: rgba(239,68,68,0.15);  color: #f87171; opacity: 1; }
-  .hint-tag.start  { background: rgba(108,108,255,0.15); color: #818cf8; opacity: 1; }
+  .hint-tag.higher { background: #14532d; color: #86efac; border: 1.5px solid #22c55e; opacity: 1; }
+  .hint-tag.lower  { background: #450a0a; color: #fca5a5; border: 1.5px solid #ef4444; opacity: 1; }
+  .hint-tag.start  { background: #2e1065; color: #e9d5ff; border: 1.5px solid #a855f7; opacity: 1; }
 
+  /* ── STATS ── */
   .stats-row {
     display: flex;
-    gap: clamp(8px,2vw,12px);
-    padding: 0 clamp(16px,5vw,28px);
-    margin-bottom: clamp(10px,2.5vw,16px);
+    gap: 12px;
+    padding: 0 20px;
+    margin-bottom: 14px;
   }
-
   .stat-card {
     flex: 1;
-    background: #1a1a2e;
-    border-radius: clamp(10px,3vw,14px);
-    padding: clamp(10px,2.5vw,14px);
+    border-radius: 16px;
+    padding: 14px 10px 12px;
     text-align: center;
-    border: 0.5px solid rgba(255,255,255,0.06);
+    border: 1.5px solid;
+    position: relative;
   }
+  .stat-card.attempts { background: #1a0a3a; border-color: #7c3aed; }
+  .stat-card.record   { background: #1a1a08; border-color: #ca8a04; }
 
   .stat-val {
     font-family: 'Space Mono', monospace;
-    font-size: clamp(18px,5vw,24px);
-    font-weight: 700;
-    color: white;
+    font-size: 32px; font-weight: 700; line-height: 1;
   }
+  .stat-card.attempts .stat-val { color: #c4b5fd; }
+  .stat-card.record   .stat-val { color: #fde68a; }
 
   .stat-lbl {
-    font-size: clamp(9px,2vw,11px);
-    color: rgba(255,255,255,0.35);
-    letter-spacing: 1px;
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 1.5px;
     text-transform: uppercase;
-    margin-top: 2px;
+    margin-top: 5px;
   }
+  .stat-card.attempts .stat-lbl { color: #a78bfa; }
+  .stat-card.record   .stat-lbl { color: #fbbf24; }
 
   .best-badge {
-    font-size: 10px;
-    color: #fbbf24;
-    background: rgba(251,191,36,0.12);
+    font-size: 10px; color: #fbbf24;
+    background: rgba(251,191,36,0.15);
     border-radius: 20px;
-    padding: 2px 8px;
-    margin-top: 3px;
+    padding: 2px 8px; margin-top: 4px;
     display: inline-block;
     font-family: 'Space Mono', monospace;
-    opacity: 0;
-    transition: opacity 0.4s;
+    opacity: 0; transition: opacity 0.4s;
   }
 
-  .input-area {
-    padding: 0 clamp(16px,5vw,28px);
-    margin-bottom: clamp(8px,2vw,14px);
+  /* reset record button inside card */
+  .btn-reset-record {
+    position: absolute;
+    top: 8px; right: 8px;
+    background: rgba(202,138,4,0.15);
+    border: 1px solid #92400e;
+    border-radius: 8px;
+    padding: 3px 7px;
+    font-size: 11px; font-weight: 700;
+    color: #fbbf24;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    line-height: 1.4;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    transition: background 0.15s;
   }
+  .btn-reset-record:active { background: rgba(202,138,4,0.35); transform: scale(0.93); }
 
+  /* confirm bubble */
+  .confirm-bubble {
+    display: none;
+    position: absolute;
+    top: -54px; right: 0;
+    background: #1a1005;
+    border: 1.5px solid #ca8a04;
+    border-radius: 12px;
+    padding: 8px 10px;
+    white-space: nowrap;
+    z-index: 20;
+    gap: 6px;
+    flex-direction: column;
+    align-items: center;
+  }
+  .confirm-bubble.show { display: flex; }
+  .confirm-bubble p {
+    font-size: 12px; font-weight: 700;
+    color: #fde68a;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .confirm-row { display: flex; gap: 6px; }
+  .btn-confirm-yes {
+    background: #7f1d1d; border: 1px solid #ef4444;
+    border-radius: 8px; padding: 4px 12px;
+    font-size: 12px; font-weight: 700;
+    color: #fca5a5; cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .btn-confirm-yes:active { background: #991b1b; }
+  .btn-confirm-no {
+    background: #1a0a3a; border: 1px solid #4c1d95;
+    border-radius: 8px; padding: 4px 12px;
+    font-size: 12px; font-weight: 700;
+    color: #c4b5fd; cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .btn-confirm-no:active { background: #2e1065; }
+
+  /* ── INPUT ── */
+  .input-area { padding: 0 20px; margin-bottom: 12px; }
   .guess-input {
     width: 100%;
-    background: #1a1a2e;
-    border: 0.5px solid rgba(108,108,255,0.4);
-    border-radius: clamp(10px,3vw,14px);
-    padding: clamp(12px,3vw,16px) 20px;
-    font-size: clamp(20px,5vw,26px);
+    background: #1e1040;
+    border: 2px solid #7c3aed;
+    border-radius: 16px;
+    padding: 16px 20px;
+    font-size: 30px;
     font-family: 'Space Mono', monospace;
-    color: white;
+    font-weight: 700;
+    color: #f0abfc;
     text-align: center;
     outline: none;
-    transition: border-color 0.2s;
     -webkit-appearance: none;
+    transition: border-color 0.2s;
   }
-  .guess-input:focus { border-color: #6c6cff; }
-  .guess-input::placeholder { color: rgba(255,255,255,0.15); font-size: clamp(12px,3vw,15px); }
-  .guess-input:disabled { opacity: 0.4; }
+  .guess-input:focus { border-color: #e879f9; }
+  .guess-input::placeholder { color: #6b21a8; font-size: 16px; font-weight: 400; }
+  .guess-input:disabled { opacity: 0.3; }
 
+  /* ── NUMPAD ── */
   .numpad {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: clamp(6px,1.5vw,10px);
-    padding: 0 clamp(16px,5vw,28px);
-    margin-bottom: clamp(10px,2.5vw,16px);
+    gap: 10px;
+    padding: 0 20px;
+    margin-bottom: 14px;
   }
-
   .numpad-btn {
-    background: #1e1e32;
-    border: none;
-    border-radius: clamp(10px,2.5vw,14px);
-    padding: clamp(12px,3.5vw,16px);
-    font-size: clamp(16px,4vw,20px);
+    background: #1e1040;
+    border: 1.5px solid #4c1d95;
+    border-radius: 14px;
+    padding: 18px 10px;
+    font-size: 24px;
     font-family: 'Space Mono', monospace;
     font-weight: 700;
-    color: rgba(255,255,255,0.8);
+    color: #e9d5ff;
     cursor: pointer;
+    transition: background 0.1s, transform 0.08s;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    line-height: 1;
+  }
+  .numpad-btn:active { background: #2e1065; transform: scale(0.91); }
+  .numpad-btn.del-btn { font-size: 15px; font-weight: 700; color: #fca5a5; border-color: #7f1d1d; background: #1a0808; font-family: 'DM Sans', sans-serif; }
+  .numpad-btn.del-btn:active { background: #2a0f0f; }
+  .numpad-btn.ok-btn { background: #7c3aed; border-color: #a855f7; color: white; font-size: 17px; font-weight: 700; font-family: 'DM Sans', sans-serif; }
+  .numpad-btn.ok-btn:active { background: #6d28d9; }
+  .numpad-btn:disabled { opacity: 0.2; pointer-events: none; }
+
+  /* ── ACTIONS ── */
+  .action-btns {
+    display: flex; gap: 12px;
+    padding: 0 20px 24px;
+    margin-top: auto;
+  }
+  .btn-start {
+    flex: 2; background: #7c3aed;
+    border: 2px solid #a855f7;
+    border-radius: 16px; padding: 18px;
+    font-size: 18px; font-weight: 700;
+    font-family: 'DM Sans', sans-serif;
+    color: white; cursor: pointer;
     transition: background 0.15s, transform 0.1s;
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
+    letter-spacing: 1px;
   }
-  .numpad-btn:active { background: #2a2a48; transform: scale(0.93); }
-  .numpad-btn.del-btn { font-size: clamp(11px,2.5vw,13px); color: rgba(255,100,100,0.8); }
-  .numpad-btn.ok-btn  { background: #6c6cff; color: white; font-size: clamp(12px,2.5vw,14px); }
-  .numpad-btn.ok-btn:active { background: #5555dd; }
-  .numpad-btn:disabled { opacity: 0.3; pointer-events: none; }
-
-  .action-btns {
-    display: flex;
-    gap: clamp(8px,2vw,12px);
-    padding: 0 clamp(16px,5vw,28px) clamp(16px,4vw,24px);
-    margin-top: auto;
-  }
-
-  .btn-start {
-    flex: 2;
-    background: #6c6cff;
-    border: none;
-    border-radius: clamp(10px,3vw,14px);
-    padding: clamp(14px,3.5vw,18px);
-    font-size: clamp(13px,3.5vw,16px);
-    font-weight: 600;
-    font-family: 'DM Sans', sans-serif;
-    color: white;
-    cursor: pointer;
-    transition: background 0.2s, transform 0.1s;
-    -webkit-tap-highlight-color: transparent;
-    touch-action: manipulation;
-  }
-  .btn-start:active { transform: scale(0.97); background: #5555dd; }
-
+  .btn-start:active { transform: scale(0.97); background: #6d28d9; }
   .btn-restart {
-    flex: 1;
-    background: #1e1e32;
-    border: 0.5px solid rgba(255,255,255,0.1);
-    border-radius: clamp(10px,3vw,14px);
-    padding: clamp(14px,3.5vw,18px);
-    font-size: clamp(12px,3vw,14px);
-    font-weight: 500;
+    flex: 1; background: #1a0a2e;
+    border: 1.5px solid #4c1d95;
+    border-radius: 16px; padding: 18px;
+    font-size: 16px; font-weight: 700;
     font-family: 'DM Sans', sans-serif;
-    color: rgba(255,255,255,0.6);
-    cursor: pointer;
-    transition: background 0.2s, transform 0.1s;
+    color: #c4b5fd; cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
+    display: none;
   }
-  .btn-restart:active { transform: scale(0.97); background: #2a2a48; }
+  .btn-restart:active { transform: scale(0.97); background: #2e1065; }
 
+  /* ── WIN OVERLAY ── */
   .win-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(13,13,26,0.96);
+    position: fixed; inset: 0;
+    background: rgba(8,4,20,0.97);
     display: none;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: clamp(8px,2vw,14px);
-    z-index: 10;
-    padding: 24px;
+    align-items: center; justify-content: center;
+    gap: 10px; z-index: 100;
+    padding: 32px 24px;
   }
-
-  .win-emoji { font-size: clamp(40px,10vw,56px); }
-  .win-title {
-    font-family: 'Space Mono', monospace;
-    font-size: clamp(18px,5vw,24px);
-    font-weight: 700;
-    color: white;
-  }
-  .win-num {
-    font-family: 'Space Mono', monospace;
-    font-size: clamp(52px,14vw,72px);
-    font-weight: 700;
-    color: #6c6cff;
-    line-height: 1;
-  }
-  .win-sub {
-    font-size: clamp(13px,3.5vw,16px);
-    color: rgba(255,255,255,0.45);
-    text-align: center;
-  }
-  .win-badge {
-    font-size: clamp(11px,2.5vw,13px);
-    color: #fbbf24;
-    background: rgba(251,191,36,0.12);
-    border-radius: 20px;
-    padding: 5px 16px;
-    font-family: 'Space Mono', monospace;
-    opacity: 0;
-    transition: opacity 0.4s;
-  }
-  .btn-play-again {
-    margin-top: 8px;
-    background: #6c6cff;
-    border: none;
-    border-radius: clamp(10px,3vw,14px);
-    padding: clamp(14px,3.5vw,18px) clamp(32px,8vw,56px);
-    font-size: clamp(14px,3.5vw,17px);
-    font-weight: 600;
-    font-family: 'DM Sans', sans-serif;
-    color: white;
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
-    touch-action: manipulation;
-  }
+  .win-emoji { font-size: 68px; line-height: 1; }
+  .win-title { font-family: 'Space Mono', monospace; font-size: 26px; font-weight: 700; color: #f0abfc; margin-top: 4px; }
+  .win-num { font-family: 'Space Mono', monospace; font-size: 96px; font-weight: 700; color: #fbbf24; line-height: 1; letter-spacing: -3px; text-shadow: 0 0 50px rgba(251,191,36,0.5); }
+  .win-sub { font-size: 18px; font-weight: 600; color: #c4b5fd; text-align: center; }
+  .win-badge { font-size: 14px; font-weight: 700; color: #fbbf24; background: rgba(251,191,36,0.15); border: 1.5px solid #ca8a04; border-radius: 20px; padding: 6px 20px; font-family: 'Space Mono', monospace; opacity: 0; transition: opacity 0.4s; margin-top: 4px; }
+  .btn-play-again { margin-top: 20px; background: #7c3aed; border: 2px solid #a855f7; border-radius: 16px; padding: 18px 52px; font-size: 18px; font-weight: 700; font-family: 'DM Sans', sans-serif; color: white; cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
   .btn-play-again:active { transform: scale(0.97); }
 </style>
 
 <div class="shell">
-  <div class="status-bar">
-    <span>9:41</span><span>■■■</span>
-  </div>
+  <div class="status-bar"><span>9:41</span><span>■■■</span></div>
 
-  <div class="game-header">
+  <div class="header">
     <div class="game-title">Number Quest</div>
-    <div class="game-message" id="msg">Adivina el número que estoy pensando — ¡tienes todo el tiempo del mundo!</div>
+    <div class="game-message" id="msg">Adivina el número que estoy pensando</div>
   </div>
 
   <div class="number-display">
@@ -345,19 +342,27 @@
   </div>
 
   <div class="stats-row">
-    <div class="stat-card">
+    <div class="stat-card attempts">
       <div class="stat-val" id="tries">0</div>
       <div class="stat-lbl">Intentos</div>
     </div>
-    <div class="stat-card">
+    <div class="stat-card record" id="recordCard">
+      <button class="btn-reset-record" id="resetRecordBtn" onclick="toggleConfirm(event)">↺ reset</button>
+      <div class="confirm-bubble" id="confirmBubble">
+        <p>¿Borrar récord?</p>
+        <div class="confirm-row">
+          <button class="btn-confirm-yes" onclick="doResetRecord()">Sí, borrar</button>
+          <button class="btn-confirm-no" onclick="hideConfirm()">Cancelar</button>
+        </div>
+      </div>
       <div class="stat-val" id="best">--</div>
-      <div class="stat-lbl">Record</div>
-      <div class="best-badge" id="bestbadge">nuevo record!</div>
+      <div class="stat-lbl">Récord</div>
+      <div class="best-badge" id="bestbadge">¡nuevo!</div>
     </div>
   </div>
 
   <div class="input-area">
-    <input class="guess-input" id="ginput" type="number" placeholder="tu número" min="1" max="100" disabled />
+    <input class="guess-input" id="ginput" type="number" placeholder="tu número aquí" min="1" max="100" disabled />
   </div>
 
   <div class="numpad" id="numpad">
@@ -376,8 +381,8 @@
   </div>
 
   <div class="action-btns">
-    <button class="btn-start" id="startbtn" onclick="startGame()">INICIAR JUEGO</button>
-    <button class="btn-restart" id="restartbtn" onclick="restartGame()" style="display:none">↺ Reiniciar</button>
+    <button class="btn-start" id="startbtn" onclick="startGame()">▶ INICIAR JUEGO</button>
+    <button class="btn-restart" id="restartbtn" onclick="restartGame()">↺ Reiniciar</button>
   </div>
 
   <div class="win-overlay" id="winOverlay">
@@ -385,49 +390,47 @@
     <div class="win-title">¡Lo conseguiste!</div>
     <div class="win-num" id="winNum">42</div>
     <div class="win-sub" id="winSub">era el número correcto</div>
-    <div class="win-badge" id="winBadge">★ nuevo record</div>
+    <div class="win-badge" id="winBadge">★ ¡nuevo récord!</div>
     <button class="btn-play-again" onclick="restartGame()">Jugar de nuevo</button>
   </div>
 </div>
 
 <script>
-  let secret=0, count=0, best=null, playing=false, lo=1, hi=100;
+  let secret=0,count=0,best=null,playing=false,lo=1,hi=100;
 
-  function startGame() {
+  function startGame(){
     secret=Math.floor(Math.random()*100)+1;
-    count=0; lo=1; hi=100; playing=true;
-    setMsg("¡Perfecto! He elegido un número entre 1 y 100.");
+    count=0;lo=1;hi=100;playing=true;
+    setMsg("¡He elegido un número! ¿Puedes adivinarlo?");
     setHint("start","¡Haz tu primera suposición!");
-    setBig("?");
-    updateBar(50);
-    setTries(0);
-    enablePad(true);
-    document.getElementById("ginput").disabled=false;
-    document.getElementById("ginput").value="";
+    setBig("?");updateBar(50);setTries(0);enablePad(true);
+    const inp=document.getElementById("ginput");
+    inp.disabled=false;inp.value="";
     document.getElementById("startbtn").style.display="none";
     document.getElementById("restartbtn").style.display="flex";
     document.getElementById("winOverlay").style.display="none";
     document.getElementById("lo").textContent="1";
     document.getElementById("hi").textContent="100";
     document.getElementById("gdot").style.display="none";
+    document.getElementById("bestbadge").style.opacity="0";
+    hideConfirm();
   }
 
-  function restartGame() { startGame(); }
+  function restartGame(){startGame();}
 
-  function guess() {
-    if (!playing) return;
+  function guess(){
+    if(!playing)return;
     const v=parseInt(document.getElementById("ginput").value);
-    if (!v||v<1||v>100) { setMsg("Introduce un número entre 1 y 100."); return; }
-    count++; setTries(count); setBig(v); updateDot(v);
-    if (v===secret) {
-      win();
-    } else if (v<secret) {
+    if(!v||v<1||v>100){setMsg("Introduce un número entre 1 y 100.");return;}
+    count++;setTries(count);setBig(v);updateDot(v);
+    if(v===secret){win();}
+    else if(v<secret){
       lo=Math.max(lo,v+1);
-      setMsg("Demasiado bajo. ¡Prueba más alto!");
+      setMsg("¡Demasiado bajo! Prueba un número mayor.");
       setHint("higher","▲ más alto");
-    } else {
+    }else{
       hi=Math.min(hi,v-1);
-      setMsg("Demasiado alto. ¡Prueba más bajo!");
+      setMsg("¡Demasiado alto! Prueba un número menor.");
       setHint("lower","▼ más bajo");
     }
     updateBar(((v-1)/99)*100);
@@ -436,16 +439,35 @@
     document.getElementById("hi").textContent=hi;
   }
 
-  function win() {
-    playing=false; enablePad(false);
+  function win(){
+    playing=false;enablePad(false);
     document.getElementById("ginput").disabled=true;
     const isRecord=best===null||count<best;
-    if(isRecord){ best=count; document.getElementById("best").textContent=count; }
+    if(isRecord){best=count;document.getElementById("best").textContent=count;}
     document.getElementById("winNum").textContent=secret;
-    document.getElementById("winSub").textContent=count===1?"¡Adivinaste a la primera!":`Lo adivinaste en ${count} intentos`;
+    document.getElementById("winSub").textContent=count===1?"¡Adivinaste a la primera! 🤯":`Lo adivinaste en ${count} intentos`;
     document.getElementById("winBadge").style.opacity=isRecord?"1":"0";
     document.getElementById("winOverlay").style.display="flex";
   }
+
+  function toggleConfirm(e){
+    e.stopPropagation();
+    const b=document.getElementById("confirmBubble");
+    b.classList.toggle("show");
+  }
+  function hideConfirm(){
+    document.getElementById("confirmBubble").classList.remove("show");
+  }
+  function doResetRecord(){
+    best=null;
+    document.getElementById("best").textContent="--";
+    document.getElementById("bestbadge").style.opacity="0";
+    hideConfirm();
+  }
+
+  document.addEventListener("click",function(e){
+    if(!document.getElementById("recordCard").contains(e.target)) hideConfirm();
+  });
 
   function setMsg(t){document.getElementById("msg").textContent=t;}
   function setBig(v){document.getElementById("bignum").textContent=v;}
