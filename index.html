@@ -11,291 +11,183 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@400;700;800&display=swap" rel="stylesheet" />
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    html, body { height: 100%; overflow: hidden; }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    html, body { height: 100%; overflow: hidden; background: #0d0d1f; }
 
     .shell {
       width: 100%;
       height: 100dvh;
       background: #0d0d1f;
-      display: grid;
-      grid-template-rows: auto auto 1fr auto auto auto auto;
+      display: flex;
+      flex-direction: column;
       font-family: 'DM Sans', sans-serif;
       color: white;
-      overflow: hidden;
+      padding: 0 14px;
+      gap: 8px;
+      justify-content: space-between;
     }
 
     .status-bar {
       display: flex;
       justify-content: space-between;
-      padding: 16px 28px 8px;
-      font-size: 14px;
+      padding: 12px 4px 0;
+      font-size: 13px;
       font-family: 'Space Mono', monospace;
       color: #a78bfa;
+      flex-shrink: 0;
     }
 
-    .header {
-      padding: 4px 24px 0;
-      text-align: center;
-    }
+    .header { text-align: center; flex-shrink: 0; }
     .game-title {
       font-family: 'Space Mono', monospace;
-      font-size: 10px;
-      letter-spacing: 5px;
-      color: #f0abfc;
-      text-transform: uppercase;
-      margin-bottom: 6px;
+      font-size: 9px; letter-spacing: 4px;
+      color: #f0abfc; text-transform: uppercase; margin-bottom: 2px;
     }
     .game-message {
-      font-size: 20px;
-      font-weight: 800;
-      color: #ffffff;
-      line-height: 1.3;
+      font-size: 15px; font-weight: 700;
+      color: #ffffff; line-height: 1.3;
     }
 
     .number-display {
-      margin: 12px 16px 0;
-      background: #1e1040;
-      border-radius: 24px;
-      padding: 16px 20px 14px;
-      border: 2px solid #7c3aed;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
+      background: #1e1040; border-radius: 20px;
+      padding: 10px 16px 8px; border: 2px solid #7c3aed;
+      text-align: center; flex-shrink: 0;
     }
     .range-label {
-      font-size: 11px;
-      color: #c4b5fd;
+      font-size: 9px; color: #c4b5fd;
       font-family: 'Space Mono', monospace;
-      letter-spacing: 2px;
-      margin-bottom: 8px;
+      letter-spacing: 2px; margin-bottom: 6px;
     }
-    .range-bar {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 10px;
-    }
+    .range-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
     .range-num {
       font-family: 'Space Mono', monospace;
-      font-size: 16px;
-      font-weight: 700;
-      color: #e9d5ff;
-      min-width: 32px;
-      text-align: center;
+      font-size: 13px; font-weight: 700;
+      color: #e9d5ff; min-width: 26px; text-align: center;
     }
-    .progress-track {
-      flex: 1; height: 7px;
-      background: #3b1f72;
-      border-radius: 4px;
-      position: relative;
-    }
-    .progress-fill {
-      height: 100%; border-radius: 4px;
-      background: linear-gradient(90deg, #a855f7, #ec4899);
-      transition: width 0.4s ease;
-    }
+    .progress-track { flex: 1; height: 6px; background: #3b1f72; border-radius: 3px; position: relative; }
+    .progress-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg,#a855f7,#ec4899); transition: width 0.4s ease; }
     .guess-dot {
-      position: absolute;
-      top: 50%; transform: translate(-50%, -50%);
-      width: 15px; height: 15px;
-      border-radius: 50%;
-      background: #fbbf24;
-      border: 2px solid white;
-      display: none;
-      transition: left 0.4s ease;
+      position: absolute; top: 50%; transform: translate(-50%,-50%);
+      width: 13px; height: 13px; border-radius: 50%;
+      background: #fbbf24; border: 2px solid white;
+      display: none; transition: left 0.4s ease;
     }
     .big-number {
       font-family: 'Space Mono', monospace;
-      font-size: 96px;
-      font-weight: 700;
-      color: #f0abfc;
-      line-height: 1;
-      letter-spacing: -3px;
-      text-shadow: 0 0 40px rgba(192,80,252,0.45);
+      font-size: 64px; font-weight: 700; color: #f0abfc;
+      line-height: 1; letter-spacing: -2px;
+      text-shadow: 0 0 30px rgba(192,80,252,0.45);
     }
     .hint-tag {
-      margin-top: 8px;
-      display: inline-block;
-      font-size: 16px; font-weight: 700;
-      padding: 6px 20px;
-      border-radius: 20px;
+      margin-top: 5px; display: inline-block;
+      font-size: 13px; font-weight: 700;
+      padding: 4px 16px; border-radius: 20px;
       opacity: 0; transition: opacity 0.3s;
     }
-    .hint-tag.higher { background: #14532d; color: #86efac; border: 2px solid #22c55e; opacity: 1; }
-    .hint-tag.lower  { background: #450a0a; color: #fca5a5; border: 2px solid #ef4444; opacity: 1; }
-    .hint-tag.start  { background: #2e1065; color: #e9d5ff; border: 2px solid #a855f7; opacity: 1; }
+    .hint-tag.higher { background:#14532d; color:#86efac; border:1.5px solid #22c55e; opacity:1; }
+    .hint-tag.lower  { background:#450a0a; color:#fca5a5; border:1.5px solid #ef4444; opacity:1; }
+    .hint-tag.start  { background:#2e1065; color:#e9d5ff; border:1.5px solid #a855f7; opacity:1; }
 
-    .stats-row {
-      display: flex;
-      gap: 12px;
-      padding: 12px 16px 0;
-    }
+    .stats-row { display: flex; gap: 10px; flex-shrink: 0; }
     .stat-card {
-      flex: 1;
-      border-radius: 18px;
-      padding: 14px 10px;
-      text-align: center;
-      border: 2px solid;
-      position: relative;
+      flex: 1; border-radius: 16px;
+      padding: 10px 8px; text-align: center;
+      border: 2px solid; position: relative;
     }
-    .stat-card.attempts { background: #1a0a3a; border-color: #7c3aed; }
-    .stat-card.record   { background: #1a1a08; border-color: #ca8a04; }
-    .stat-val {
-      font-family: 'Space Mono', monospace;
-      font-size: 38px; font-weight: 700; line-height: 1;
-    }
-    .stat-card.attempts .stat-val { color: #c4b5fd; }
-    .stat-card.record   .stat-val { color: #fde68a; }
-    .stat-lbl {
-      font-size: 12px; font-weight: 700;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      margin-top: 5px;
-    }
-    .stat-card.attempts .stat-lbl { color: #a78bfa; }
-    .stat-card.record   .stat-lbl { color: #fbbf24; }
+    .stat-card.attempts { background:#1a0a3a; border-color:#7c3aed; }
+    .stat-card.record   { background:#1a1a08; border-color:#ca8a04; }
+    .stat-val { font-family:'Space Mono',monospace; font-size:30px; font-weight:700; line-height:1; }
+    .stat-card.attempts .stat-val { color:#c4b5fd; }
+    .stat-card.record   .stat-val { color:#fde68a; }
+    .stat-lbl { font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; margin-top:3px; }
+    .stat-card.attempts .stat-lbl { color:#a78bfa; }
+    .stat-card.record   .stat-lbl { color:#fbbf24; }
     .best-badge {
-      font-size: 11px; color: #fbbf24;
-      background: rgba(251,191,36,0.15);
-      border-radius: 20px;
-      padding: 2px 8px; margin-top: 4px;
-      display: inline-block;
-      font-family: 'Space Mono', monospace;
-      opacity: 0; transition: opacity 0.4s;
+      font-size:9px; color:#fbbf24; background:rgba(251,191,36,0.15);
+      border-radius:20px; padding:1px 7px; margin-top:2px;
+      display:inline-block; font-family:'Space Mono',monospace;
+      opacity:0; transition:opacity 0.4s;
     }
     .btn-reset-record {
-      position: absolute;
-      top: 8px; right: 8px;
-      background: rgba(202,138,4,0.2);
-      border: 1.5px solid #92400e;
-      border-radius: 8px;
-      padding: 4px 9px;
-      font-size: 12px; font-weight: 700;
-      color: #fbbf24;
-      cursor: pointer;
-      font-family: 'DM Sans', sans-serif;
-      -webkit-tap-highlight-color: transparent;
-      touch-action: manipulation;
+      position:absolute; top:6px; right:6px;
+      background:rgba(202,138,4,0.2); border:1.5px solid #92400e;
+      border-radius:7px; padding:3px 7px;
+      font-size:11px; font-weight:700; color:#fbbf24;
+      cursor:pointer; font-family:'DM Sans',sans-serif; touch-action:manipulation;
     }
-    .btn-reset-record:active { background: rgba(202,138,4,0.4); }
+    .btn-reset-record:active { background:rgba(202,138,4,0.4); }
     .confirm-bubble {
-      display: none;
-      position: absolute;
-      top: -68px; right: 0;
-      background: #1a1005;
-      border: 2px solid #ca8a04;
-      border-radius: 14px;
-      padding: 10px 12px;
-      white-space: nowrap;
-      z-index: 20;
-      flex-direction: column;
-      align-items: center;
-      gap: 7px;
+      display:none; position:absolute; top:-64px; right:0;
+      background:#1a1005; border:2px solid #ca8a04;
+      border-radius:12px; padding:8px 10px;
+      white-space:nowrap; z-index:20;
+      flex-direction:column; align-items:center; gap:6px;
     }
-    .confirm-bubble.show { display: flex; }
-    .confirm-bubble p { font-size: 13px; font-weight: 700; color: #fde68a; }
-    .confirm-row { display: flex; gap: 8px; }
-    .btn-confirm-yes { background: #7f1d1d; border: 1.5px solid #ef4444; border-radius: 9px; padding: 5px 14px; font-size: 13px; font-weight: 700; color: #fca5a5; cursor: pointer; font-family: 'DM Sans', sans-serif; }
-    .btn-confirm-no  { background: #1a0a3a; border: 1.5px solid #4c1d95; border-radius: 9px; padding: 5px 14px; font-size: 13px; font-weight: 700; color: #c4b5fd; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+    .confirm-bubble.show { display:flex; }
+    .confirm-bubble p { font-size:12px; font-weight:700; color:#fde68a; }
+    .confirm-row { display:flex; gap:6px; }
+    .btn-confirm-yes { background:#7f1d1d; border:1.5px solid #ef4444; border-radius:8px; padding:4px 12px; font-size:12px; font-weight:700; color:#fca5a5; cursor:pointer; font-family:'DM Sans',sans-serif; }
+    .btn-confirm-no  { background:#1a0a3a; border:1.5px solid #4c1d95; border-radius:8px; padding:4px 12px; font-size:12px; font-weight:700; color:#c4b5fd; cursor:pointer; font-family:'DM Sans',sans-serif; }
 
-    .input-area { padding: 12px 16px 0; }
+    .input-area { flex-shrink:0; }
     .guess-input {
-      width: 100%;
-      background: #1e1040;
-      border: 2px solid #7c3aed;
-      border-radius: 18px;
-      padding: 18px 20px;
-      font-size: 34px;
-      font-family: 'Space Mono', monospace;
-      font-weight: 700;
-      color: #f0abfc;
-      text-align: center;
-      outline: none;
-      -webkit-appearance: none;
-      transition: border-color 0.2s;
+      width:100%; background:#1e1040; border:2px solid #7c3aed;
+      border-radius:14px; padding:13px 16px;
+      font-size:28px; font-family:'Space Mono',monospace;
+      font-weight:700; color:#f0abfc; text-align:center;
+      outline:none; -webkit-appearance:none; transition:border-color 0.2s;
     }
-    .guess-input:focus { border-color: #e879f9; }
-    .guess-input::placeholder { color: #6b21a8; font-size: 18px; font-weight: 400; }
-    .guess-input:disabled { opacity: 0.3; }
+    .guess-input:focus { border-color:#e879f9; }
+    .guess-input::placeholder { color:#6b21a8; font-size:15px; font-weight:400; }
+    .guess-input:disabled { opacity:0.3; }
 
-    .numpad {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      padding: 12px 16px 0;
-    }
+    .numpad { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; flex-shrink:0; }
     .numpad-btn {
-      background: #1e1040;
-      border: 2px solid #4c1d95;
-      border-radius: 16px;
-      padding: 20px 10px;
-      font-size: 28px;
-      font-family: 'Space Mono', monospace;
-      font-weight: 700;
-      color: #e9d5ff;
-      cursor: pointer;
-      transition: background 0.1s, transform 0.08s;
-      -webkit-tap-highlight-color: transparent;
-      touch-action: manipulation;
-      line-height: 1;
+      background:#1e1040; border:2px solid #4c1d95;
+      border-radius:14px; padding:16px 8px;
+      font-size:24px; font-family:'Space Mono',monospace;
+      font-weight:700; color:#e9d5ff; cursor:pointer;
+      transition:background 0.1s,transform 0.08s;
+      touch-action:manipulation; line-height:1;
     }
-    .numpad-btn:active { background: #2e1065; transform: scale(0.91); }
-    .numpad-btn.del-btn { font-size: 16px; font-weight: 700; color: #fca5a5; border-color: #7f1d1d; background: #1a0808; font-family: 'DM Sans', sans-serif; }
-    .numpad-btn.del-btn:active { background: #2a0f0f; }
-    .numpad-btn.ok-btn { background: #7c3aed; border-color: #a855f7; color: white; font-size: 20px; font-weight: 800; font-family: 'DM Sans', sans-serif; }
-    .numpad-btn.ok-btn:active { background: #6d28d9; }
-    .numpad-btn:disabled { opacity: 0.2; pointer-events: none; }
+    .numpad-btn:active { background:#2e1065; transform:scale(0.91); }
+    .numpad-btn.del-btn { font-size:13px; font-weight:700; color:#fca5a5; border-color:#7f1d1d; background:#1a0808; font-family:'DM Sans',sans-serif; }
+    .numpad-btn.del-btn:active { background:#2a0f0f; }
+    .numpad-btn.ok-btn { background:#7c3aed; border-color:#a855f7; color:white; font-size:17px; font-weight:800; font-family:'DM Sans',sans-serif; }
+    .numpad-btn.ok-btn:active { background:#6d28d9; }
+    .numpad-btn:disabled { opacity:0.2; pointer-events:none; }
 
-    .action-btns {
-      display: flex;
-      gap: 12px;
-      padding: 12px 16px 20px;
-    }
+    .action-btns { display:flex; gap:10px; flex-shrink:0; padding-bottom:14px; }
     .btn-start {
-      flex: 2; background: #7c3aed;
-      border: 2px solid #a855f7;
-      border-radius: 18px; padding: 20px;
-      font-size: 20px; font-weight: 800;
-      font-family: 'DM Sans', sans-serif;
-      color: white; cursor: pointer;
-      transition: background 0.15s, transform 0.1s;
-      -webkit-tap-highlight-color: transparent;
-      touch-action: manipulation;
-      letter-spacing: 1px;
+      flex:2; background:#7c3aed; border:2px solid #a855f7;
+      border-radius:16px; padding:16px;
+      font-size:18px; font-weight:800; font-family:'DM Sans',sans-serif;
+      color:white; cursor:pointer; touch-action:manipulation; letter-spacing:1px;
+      transition:background 0.15s,transform 0.1s;
     }
-    .btn-start:active { transform: scale(0.97); background: #6d28d9; }
+    .btn-start:active { transform:scale(0.97); background:#6d28d9; }
     .btn-restart {
-      flex: 1; background: #1a0a2e;
-      border: 2px solid #4c1d95;
-      border-radius: 18px; padding: 20px;
-      font-size: 18px; font-weight: 700;
-      font-family: 'DM Sans', sans-serif;
-      color: #c4b5fd; cursor: pointer;
-      transition: background 0.15s, transform 0.1s;
-      -webkit-tap-highlight-color: transparent;
-      touch-action: manipulation;
-      display: none;
+      flex:1; background:#1a0a2e; border:2px solid #4c1d95;
+      border-radius:16px; padding:16px;
+      font-size:16px; font-weight:700; font-family:'DM Sans',sans-serif;
+      color:#c4b5fd; cursor:pointer; touch-action:manipulation;
+      transition:background 0.15s,transform 0.1s; display:none;
     }
-    .btn-restart:active { transform: scale(0.97); background: #2e1065; }
+    .btn-restart:active { transform:scale(0.97); background:#2e1065; }
 
     .win-overlay {
-      position: fixed; inset: 0;
-      background: rgba(8,4,20,0.97);
-      display: none;
-      flex-direction: column;
-      align-items: center; justify-content: center;
-      gap: 12px; z-index: 100; padding: 32px 24px;
+      position:fixed; inset:0; background:rgba(8,4,20,0.97);
+      display:none; flex-direction:column;
+      align-items:center; justify-content:center;
+      gap:10px; z-index:100; padding:32px 24px;
     }
-    .win-emoji { font-size: 72px; line-height: 1; }
-    .win-title { font-family: 'Space Mono', monospace; font-size: 28px; font-weight: 700; color: #f0abfc; margin-top: 4px; }
-    .win-num { font-family: 'Space Mono', monospace; font-size: 108px; font-weight: 700; color: #fbbf24; line-height: 1; letter-spacing: -4px; text-shadow: 0 0 60px rgba(251,191,36,0.5); }
-    .win-sub { font-size: 20px; font-weight: 700; color: #c4b5fd; text-align: center; }
-    .win-badge { font-size: 15px; font-weight: 700; color: #fbbf24; background: rgba(251,191,36,0.15); border: 2px solid #ca8a04; border-radius: 20px; padding: 7px 22px; font-family: 'Space Mono', monospace; opacity: 0; transition: opacity 0.4s; }
-    .btn-play-again { margin-top: 16px; background: #7c3aed; border: 2px solid #a855f7; border-radius: 18px; padding: 20px 56px; font-size: 20px; font-weight: 800; font-family: 'DM Sans', sans-serif; color: white; cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
-    .btn-play-again:active { transform: scale(0.97); }
+    .win-emoji { font-size:64px; line-height:1; }
+    .win-title { font-family:'Space Mono',monospace; font-size:24px; font-weight:700; color:#f0abfc; margin-top:4px; }
+    .win-num { font-family:'Space Mono',monospace; font-size:100px; font-weight:700; color:#fbbf24; line-height:1; letter-spacing:-4px; text-shadow:0 0 60px rgba(251,191,36,0.5); }
+    .win-sub { font-size:18px; font-weight:700; color:#c4b5fd; text-align:center; }
+    .win-badge { font-size:14px; font-weight:700; color:#fbbf24; background:rgba(251,191,36,0.15); border:2px solid #ca8a04; border-radius:20px; padding:6px 20px; font-family:'Space Mono',monospace; opacity:0; transition:opacity 0.4s; }
+    .btn-play-again { margin-top:14px; background:#7c3aed; border:2px solid #a855f7; border-radius:16px; padding:18px 52px; font-size:18px; font-weight:800; font-family:'DM Sans',sans-serif; color:white; cursor:pointer; touch-action:manipulation; }
+    .btn-play-again:active { transform:scale(0.97); }
   </style>
 </head>
 <body>
@@ -380,20 +272,20 @@
   let secret=0, count=0, best=null, playing=false, lo=1, hi=100;
 
   function startGame() {
-    secret = Math.floor(Math.random() * 100) + 1;
+    secret=Math.floor(Math.random()*100)+1;
     count=0; lo=1; hi=100; playing=true;
     setMsg("¡He elegido un número! ¿Puedes adivinarlo?");
-    setHint("start", "¡Haz tu primera suposición!");
+    setHint("start","¡Haz tu primera suposición!");
     setBig("?"); updateBar(50); setTries(0); enablePad(true);
-    const inp = document.getElementById("ginput");
-    inp.disabled = false; inp.value = "";
-    document.getElementById("startbtn").style.display = "none";
-    document.getElementById("restartbtn").style.display = "flex";
-    document.getElementById("winOverlay").style.display = "none";
-    document.getElementById("lo").textContent = "1";
-    document.getElementById("hi").textContent = "100";
-    document.getElementById("gdot").style.display = "none";
-    document.getElementById("bestbadge").style.opacity = "0";
+    const inp=document.getElementById("ginput");
+    inp.disabled=false; inp.value="";
+    document.getElementById("startbtn").style.display="none";
+    document.getElementById("restartbtn").style.display="flex";
+    document.getElementById("winOverlay").style.display="none";
+    document.getElementById("lo").textContent="1";
+    document.getElementById("hi").textContent="100";
+    document.getElementById("gdot").style.display="none";
+    document.getElementById("bestbadge").style.opacity="0";
     hideConfirm();
   }
 
@@ -401,69 +293,67 @@
 
   function guess() {
     if (!playing) return;
-    const v = parseInt(document.getElementById("ginput").value);
-    if (!v || v < 1 || v > 100) { setMsg("Introduce un número entre 1 y 100."); return; }
+    const v=parseInt(document.getElementById("ginput").value);
+    if (!v||v<1||v>100) { setMsg("Introduce un número entre 1 y 100."); return; }
     count++; setTries(count); setBig(v); updateDot(v);
-    if (v === secret) {
+    if (v===secret) {
       win();
-    } else if (v < secret) {
-      lo = Math.max(lo, v + 1);
+    } else if (v<secret) {
+      lo=Math.max(lo,v+1);
       setMsg("¡Demasiado bajo! Prueba un número mayor.");
-      setHint("higher", "▲ más alto");
+      setHint("higher","▲ más alto");
     } else {
-      hi = Math.min(hi, v - 1);
+      hi=Math.min(hi,v-1);
       setMsg("¡Demasiado alto! Prueba un número menor.");
-      setHint("lower", "▼ más bajo");
+      setHint("lower","▼ más bajo");
     }
-    updateBar(((v - 1) / 99) * 100);
-    document.getElementById("ginput").value = "";
-    document.getElementById("lo").textContent = lo;
-    document.getElementById("hi").textContent = hi;
+    updateBar(((v-1)/99)*100);
+    document.getElementById("ginput").value="";
+    document.getElementById("lo").textContent=lo;
+    document.getElementById("hi").textContent=hi;
   }
 
   function win() {
-    playing = false; enablePad(false);
-    document.getElementById("ginput").disabled = true;
-    const isRecord = best === null || count < best;
-    if (isRecord) { best = count; document.getElementById("best").textContent = count; }
-    document.getElementById("winNum").textContent = secret;
-    document.getElementById("winSub").textContent = count === 1 ? "¡Adivinaste a la primera! 🤯" : `Lo adivinaste en ${count} intentos`;
-    document.getElementById("winBadge").style.opacity = isRecord ? "1" : "0";
-    document.getElementById("winOverlay").style.display = "flex";
+    playing=false; enablePad(false);
+    document.getElementById("ginput").disabled=true;
+    const isRecord=best===null||count<best;
+    if (isRecord) { best=count; document.getElementById("best").textContent=count; }
+    document.getElementById("winNum").textContent=secret;
+    document.getElementById("winSub").textContent=count===1?"¡Adivinaste a la primera! 🤯":`Lo adivinaste en ${count} intentos`;
+    document.getElementById("winBadge").style.opacity=isRecord?"1":"0";
+    document.getElementById("winOverlay").style.display="flex";
   }
 
   function toggleConfirm(e) { e.stopPropagation(); document.getElementById("confirmBubble").classList.toggle("show"); }
   function hideConfirm() { document.getElementById("confirmBubble").classList.remove("show"); }
   function doResetRecord() {
-    best = null;
-    document.getElementById("best").textContent = "--";
-    document.getElementById("bestbadge").style.opacity = "0";
+    best=null;
+    document.getElementById("best").textContent="--";
+    document.getElementById("bestbadge").style.opacity="0";
     hideConfirm();
   }
-
-  document.addEventListener("click", function(e) {
+  document.addEventListener("click",function(e){
     if (!document.getElementById("recordCard").contains(e.target)) hideConfirm();
   });
 
-  function setMsg(t) { document.getElementById("msg").textContent = t; }
-  function setBig(v) { document.getElementById("bignum").textContent = v; }
-  function setTries(n) { document.getElementById("tries").textContent = n; }
-  function setHint(cls, txt) { const h = document.getElementById("hint"); h.className = "hint-tag " + cls; h.textContent = txt; }
-  function updateBar(pct) { document.getElementById("pfill").style.width = pct + "%"; }
-  function updateDot(v) { const d = document.getElementById("gdot"); d.style.display = "block"; d.style.left = ((v-1)/99*100) + "%"; }
-  function enablePad(on) { document.querySelectorAll(".numpad-btn").forEach(b => b.disabled = !on); }
+  function setMsg(t){document.getElementById("msg").textContent=t;}
+  function setBig(v){document.getElementById("bignum").textContent=v;}
+  function setTries(n){document.getElementById("tries").textContent=n;}
+  function setHint(cls,txt){const h=document.getElementById("hint");h.className="hint-tag "+cls;h.textContent=txt;}
+  function updateBar(pct){document.getElementById("pfill").style.width=pct+"%";}
+  function updateDot(v){const d=document.getElementById("gdot");d.style.display="block";d.style.left=((v-1)/99*100)+"%";}
+  function enablePad(on){document.querySelectorAll(".numpad-btn").forEach(b=>b.disabled=!on);}
 
-  document.getElementById("numpad").addEventListener("click", function(e) {
-    const btn = e.target.closest(".numpad-btn");
-    if (!btn || btn.disabled) return;
-    const inp = document.getElementById("ginput");
-    if (btn.id === "delbtn") { inp.value = inp.value.slice(0, -1); }
-    else if (btn.id === "okbtn") { guess(); }
-    else { if (inp.value.length < 3) inp.value += btn.getAttribute("data-n"); }
+  document.getElementById("numpad").addEventListener("click",function(e){
+    const btn=e.target.closest(".numpad-btn");
+    if (!btn||btn.disabled) return;
+    const inp=document.getElementById("ginput");
+    if (btn.id==="delbtn") { inp.value=inp.value.slice(0,-1); }
+    else if (btn.id==="okbtn") { guess(); }
+    else { if (inp.value.length<3) inp.value+=btn.getAttribute("data-n"); }
   });
 
-  document.getElementById("ginput").addEventListener("keydown", function(e) { if (e.key === "Enter") guess(); });
+  document.getElementById("ginput").addEventListener("keydown",function(e){if(e.key==="Enter")guess();});
 </script>
-
 </body>
 </html>
